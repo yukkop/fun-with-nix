@@ -5,10 +5,20 @@
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
-  outputs = inputs@ {nixpkgs, hyprland, ...}: {
+  outputs = inputs@ {nixpkgs, hyprland, self, ...}: 
+
+  let
+    system = "x86_64-linux";
+  in {
     nixosConfigurations = {
       hectic = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
+	pkgs = import nixpkgs {
+	  inherit system;
+	  config = {
+	    allowUnfree=true; 
+	  };
+	};
         modules = [
           ./configuration.nix
           hyprland.nixosModules.default
