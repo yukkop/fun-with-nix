@@ -13,10 +13,12 @@
     nixosConfigurations = {
       hectic = nixpkgs.lib.nixosSystem {
         inherit system;
+	# pkgs = nixpkgs.legacyPackages.${system};
+
 	pkgs = import nixpkgs {
 	  inherit system;
 	  config = {
-	    allowUnfree=true; 
+	    allowUnfree = true; 
 	  };
 	};
         modules = [

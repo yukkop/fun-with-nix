@@ -14,7 +14,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  boot.extraModulePackages = [ config.boot.kernelPackages.rtl8192eu ];
  
   networking.hostName = "hectic"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -26,6 +25,11 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  boot.initrd.kernelModules = ["amdgpu"];
+  services.xserver.videoDrivers = ["amdgpu"];
+  hardware.opengl.driSupport = true;
+  hardware.opengl.driSupport32Bit = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Rome";
@@ -54,7 +58,6 @@
   # services.xserver.windowManager.awesome.enable = true;
   # services.xserver.windowManager.dwm.enable = true;
   # services.xserver.windowManager.xmonad.enable = true;
-  programs.hyprland.enable = true;
 
   # Docker
   virtualisation.docker.enable = true;
@@ -109,6 +112,7 @@
       chromium
       ncdu
       libreoffice
+      vscode
     ];
   };
 
@@ -132,6 +136,8 @@
      jq
      htop
      nginx
+     cmake
+     flutter
   ];
 
   environment.shellInit = ''
@@ -149,6 +155,7 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+  # programs.hyprland.enable = true;
 
   # List services that you want to enable:
 
