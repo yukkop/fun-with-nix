@@ -5,9 +5,9 @@
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
-  outputs = {nixpkgs, hyprland, ...}: {
+  outputs = inputs@ {nixpkgs, hyprland, ...}: {
     nixosConfigurations = {
-      hectic = inputs.nixpkgs.lib.nixosSystem {
+      hectic = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./configuration.nix

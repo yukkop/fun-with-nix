@@ -121,7 +121,6 @@
   #  wget
      neovim
      tmux
-     rtw89-firmware
      xclip
      dotnet-sdk
      msbuild
