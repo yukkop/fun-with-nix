@@ -120,6 +120,7 @@
         vscodeExtensions = with vscode-extensions; [
           alefragnani.project-manager
 	  dart-code.dart-code
+	  esbenp.prettier-vscode
         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
             name = "remote-ssh-edit";
@@ -155,6 +156,7 @@
      nginx
      cmake
      flutter
+     dart
   ];
 
   environment.shellInit = ''
