@@ -27,9 +27,12 @@
   networking.networkmanager.enable = true;
 
   boot.initrd.kernelModules = ["amdgpu"];
-  services.xserver.videoDrivers = ["amdgpu"];
+  # services.xserver.videoDrivers = ["amdgpu" "modesetting"];
   hardware.opengl.driSupport = true;
   hardware.opengl.driSupport32Bit = true;
+
+  # nvidia-drm.modeset=1 is required for some wayland compositors, e.g. sway
+  hardware.nvidia.modesetting.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Rome";
@@ -101,6 +104,7 @@
       firefox
       kitty
       pciutils
+      usbutils
       lutris
       jetbrains.rider
       git
@@ -112,9 +116,22 @@
       chromium
       ncdu
       libreoffice
-      vscode
+      (vscode-with-extensions.override {
+        vscodeExtensions = with vscode-extensions; [
+          alefragnani.project-manager
+	  dart-code.dart-code
+        ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          {
+            name = "remote-ssh-edit";
+            publisher = "ms-vscode-remote";
+            version = "0.47.2";
+            sha256 = "1hp6gjh4xp2m1xlm1jsdzxw9d8frkiidhph6nvl24d0h8z34w49g";
+          }
+        ];
+      })
     ];
   };
+
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -134,7 +151,7 @@
      docker
      docker-compose
      jq
-     htop
+     htop-vim
      nginx
      cmake
      flutter
