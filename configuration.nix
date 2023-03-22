@@ -116,11 +116,13 @@
       chromium
       ncdu
       libreoffice
+      steam
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
           alefragnani.project-manager
 	  dart-code.dart-code
 	  esbenp.prettier-vscode
+          asvetliakov.vscode-neovim
         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
             name = "remote-ssh-edit";
