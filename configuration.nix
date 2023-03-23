@@ -52,25 +52,42 @@
     LC_TIME = "it_IT.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the XFCE Desktop Environment.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
-  # services.xserver.windowManager.awesome.enable = true;
-  # services.xserver.windowManager.dwm.enable = true;
-  # services.xserver.windowManager.xmonad.enable = true;
-
-  # Docker
-  virtualisation.docker.enable = true;
-
-  # Configure keymap in X11
   services.xserver = {
+    # Enable the X11 windowing system.
+    enable = true;
+
+    # Enable the XFCE Desktop Environment.
+    displayManager.lightdm.enable = true;
+    desktopManager = {
+      xterm.enable = false;
+      xfce = {
+        enable = true;
+        noDesktop = true;
+        enableXfwm = false;
+      };
+    };
+    windowManager = {
+      xmonad = {
+        enable = true;
+        enableContribAndExtras = true;
+        extraPackages = haskellPackages : [
+          haskellPackages.xmonad-contrib
+          haskellPackages.xmonad-extras
+          haskellPackages.xmonad
+        ];
+      };
+    };
+    displayManager.defaultSession = "xfce+xmonad";
+
+    # Configure keymap in X11
     layout = "us,ru";
     xkbVariant = "";
     xkbOptions = "grp:alt_shift_toggle,grp_led:scroll";
   };
+
+
+  # Docker
+  virtualisation.docker.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
