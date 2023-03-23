@@ -59,25 +59,35 @@
     # Enable the XFCE Desktop Environment.
     displayManager.lightdm.enable = true;
     desktopManager = {
-      xterm.enable = false;
+      # xterm.enable = false;
       xfce = {
         enable = true;
-        noDesktop = true;
-        enableXfwm = false;
+        # noDesktop = false;
+        # enableXfwm = false;
       };
     };
-    windowManager = {
-      xmonad = {
-        enable = true;
-        enableContribAndExtras = true;
-        extraPackages = haskellPackages : [
-          haskellPackages.xmonad-contrib
-          haskellPackages.xmonad-extras
-          haskellPackages.xmonad
-        ];
-      };
-    };
-    displayManager.defaultSession = "xfce+xmonad";
+    # windowManager = {
+    #   xmonad = {
+    #     enable = true;
+    #     enableContribAndExtras = true;
+    #     extraPackages = haskellPackages : [
+    #       haskellPackages.xmonad-contrib
+    #       haskellPackages.xmonad-extras
+    #       haskellPackages.xmonad
+    #     ];
+    #     config = ''
+    #       import XMonad
+    #       import XMonad.Config.Xfce
+    #       import XMonad.Hooks.EwmhDesktops
+    #       import XMonad.Hooks.SetWMName
+    #       
+    #       main = xmonad xfceConfig
+    #               { terminal = "xfce4-terminal"
+    #         }
+    #     '';
+    #   };
+    # };
+    # displayManager.defaultSession = "xfce+xmonad";
 
     # Configure keymap in X11
     layout = "us,ru";
@@ -134,6 +144,7 @@
       ncdu
       libreoffice
       steam
+      wally-cli # A tool to flash firmware to mechanical keyboards
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
           alefragnani.project-manager
