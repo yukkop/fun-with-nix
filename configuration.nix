@@ -57,37 +57,38 @@
     enable = true;
 
     # Enable the XFCE Desktop Environment.
-    displayManager.lightdm.enable = true;
+    # displayManager.lightdm.enable = true;
     desktopManager = {
-      # xterm.enable = false;
+      xterm.enable = false;
       xfce = {
         enable = true;
-        # noDesktop = false;
-        # enableXfwm = false;
+        noDesktop = true;
+        enableXfwm = false;
       };
     };
-    # windowManager = {
-    #   xmonad = {
-    #     enable = true;
-    #     enableContribAndExtras = true;
-    #     extraPackages = haskellPackages : [
-    #       haskellPackages.xmonad-contrib
-    #       haskellPackages.xmonad-extras
-    #       haskellPackages.xmonad
-    #     ];
-    #     config = ''
-    #       import XMonad
-    #       import XMonad.Config.Xfce
-    #       import XMonad.Hooks.EwmhDesktops
-    #       import XMonad.Hooks.SetWMName
-    #       
-    #       main = xmonad xfceConfig
-    #               { terminal = "xfce4-terminal"
-    #         }
-    #     '';
-    #   };
-    # };
-    # displayManager.defaultSession = "xfce+xmonad";
+    windowManager = {
+      xmonad = {
+        enable = true;
+        enableContribAndExtras = true;
+        extraPackages = haskellPackages : [
+          haskellPackages.xmonad-contrib
+          haskellPackages.xmonad-extras
+          haskellPackages.xmonad
+        ];
+        config = ''
+          import XMonad
+          import XMonad.Config.Xfce
+          import XMonad.Hooks.EwmhDesktops
+          import XMonad.Hooks.SetWMName
+          
+          main = xmonad xfceConfig
+            { terminal = "kitty"
+              , modMask = mod4Mask -- optional: use Win key instead of Alt as MODi key
+            }
+        '';
+      };
+    };
+    displayManager.defaultSession = "xfce+xmonad";
 
     # Configure keymap in X11
     layout = "us,ru";
@@ -128,6 +129,9 @@
     description = "yukkop";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
+      pamixer
+      ncpamixer
+      jamesdsp
       firefox
       kitty
       pciutils
@@ -162,9 +166,7 @@
       })
     ];
   };
-
-
-  # Allow unfree packages
+# Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
