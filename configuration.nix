@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports =
@@ -28,6 +28,7 @@
 
   boot.initrd.kernelModules = ["amdgpu"];
   # services.xserver.videoDrivers = ["amdgpu" "modesetting"];
+
   hardware.opengl.driSupport = true;
   hardware.opengl.driSupport32Bit = true;
 
@@ -59,36 +60,36 @@
     # Enable the XFCE Desktop Environment.
     # displayManager.lightdm.enable = true;
     desktopManager = {
-      xterm.enable = false;
+      # xterm.enable = false;
       xfce = {
         enable = true;
-        noDesktop = true;
-        enableXfwm = false;
+        # noDesktop = true;
+        # enableXfwm = false;
       };
     };
-    windowManager = {
-      xmonad = {
-        enable = true;
-        enableContribAndExtras = true;
-        extraPackages = haskellPackages : [
-          haskellPackages.xmonad-contrib
-          haskellPackages.xmonad-extras
-          haskellPackages.xmonad
-        ];
-        config = ''
-          import XMonad
-          import XMonad.Config.Xfce
-          import XMonad.Hooks.EwmhDesktops
-          import XMonad.Hooks.SetWMName
-          
-          main = xmonad xfceConfig
-            { terminal = "kitty"
-              , modMask = mod4Mask -- optional: use Win key instead of Alt as MODi key
-            }
-        '';
-      };
-    };
-    displayManager.defaultSession = "xfce+xmonad";
+    # windowManager = {
+    #   xmonad = {
+    #     enable = true;
+    #     enableContribAndExtras = true;
+    #     extraPackages = haskellPackages : [
+    #       haskellPackages.xmonad-contrib
+    #       haskellPackages.xmonad-extras
+    #       haskellPackages.xmonad
+    #     ];
+    #     config = ''
+    #       import XMonad
+    #       import XMonad.Config.Xfce
+    #       import XMonad.Hooks.EwmhDesktops
+    #       import XMonad.Hooks.SetWMName
+    #       
+    #       main = xmonad xfceConfig
+    #         { terminal = "kitty"
+    #           , modMask = mod4Mask -- optional: use Win key instead of Alt as MODi key
+    #         }
+    #     '';
+    #   };
+    # };
+    # displayManager.defaultSession = "xfce+xmonad";
 
     # Configure keymap in X11
     layout = "us,ru";
@@ -128,7 +129,10 @@
     isNormalUser = true;
     description = "yukkop";
     extraGroups = [ "networkmanager" "wheel" ];
+    # openssh.authorizedKeys.keys = [ "" "" ]
     packages = with pkgs; [
+      jetbrains.rider
+      arduino
       pamixer
       ncpamixer
       jamesdsp
@@ -137,7 +141,6 @@
       pciutils
       usbutils
       lutris
-      jetbrains.rider
       git
       gh # github cli
       glab # gitlab cli
@@ -148,6 +151,8 @@
       ncdu
       libreoffice
       steam
+      unzip
+      zip
       wally-cli # A tool to flash firmware to mechanical keyboards
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
@@ -155,12 +160,19 @@
 	  dart-code.dart-code
 	  esbenp.prettier-vscode
           asvetliakov.vscode-neovim
+	  vscodevim.vim
         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
             name = "remote-ssh-edit";
             publisher = "ms-vscode-remote";
             version = "0.47.2";
             sha256 = "1hp6gjh4xp2m1xlm1jsdzxw9d8frkiidhph6nvl24d0h8z34w49g";
+          }
+          {
+            name = "JavaScriptSnippets";
+            publisher = "xabikos";
+            version = "1.8.0";
+            sha256 = "86de969b55fbce27a7f9f8ccbfceb8a8ff8ecf833a5fa7f64578eb4e1511afa7";
           }
         ];
       })
@@ -171,33 +183,48 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget 
-  environment.systemPackages = with pkgs; [
-  #  wget
-     neovim
-     tmux
-     xclip
-     dotnet-sdk
-     msbuild
-     nodejs-16_x
-     nodePackages.npm
-     xkblayout-state
-     docker
-     docker-compose
-     jq
-     htop-vim
-     nginx
-     cmake
-     flutter
-     dart
-  ];
+  environment = {
+    systemPackages = with pkgs; [
+      neovim
+      tmux
+      xclip
+      (with dotnetCorePackages; combinePackages [
+        sdk_3_1
+        sdk_6_0
+	sdk_7_0
+      ])
+      wineWowPackages.stableFull
+      (python39.withPackages(ps: with ps; [ pandas requests google-api-python-client uuid ])	)
+      nodejs-16_x
+      nodePackages.npm
+      xkblayout-state
+      docker
+      docker-compose
+      jq
+      htop-vim
+      nginx
+      cmake
+      flutter
+      dart
+      ninja
+      msbuild
+      cmake
+      gcc9
+      mono
+    ];
 
-  environment.shellInit = ''
-    alias ll='ls -la'
-    alias copy='xclip -selection clipboard'
-    alias paste='xclip -selection clipboard -o'
-    alias psql='sudo docker exec -it $(sudo docker ps --filter "NAME=postgresql-15-db-1" --format "{{.ID}}") psql'
-    alias psqlp='sudo docker exec -it $(sudo docker ps --filter "NAME=postgresql-15-db-1" --format "{{.ID}}") psql -U postgres'
-  '';
+    shells = [
+      "/run/current-system/sw/bin/zsh"
+    ];
+
+    shellInit = ''
+      alias ll='ls -la'
+      alias copy='xclip -selection clipboard'
+      alias paste='xclip -selection clipboard -o'
+      alias psql='sudo docker exec -it $(sudo docker ps --filter "NAME=postgresql-15-db-1" --format "{{.ID}}") psql'
+      alias psqlp='sudo docker exec -it $(sudo docker ps --filter "NAME=postgresql-15-db-1" --format "{{.ID}}") psql -U postgres'
+    '';
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
