@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, stable-22-11, ... }:
 
 {
   imports =
@@ -193,7 +193,7 @@
         sdk_6_0
 	sdk_7_0
       ])
-      wineWowPackages.stableFull
+      stable-22-11.wineWowPackages.full
       (python39.withPackages(ps: with ps; [ pandas requests google-api-python-client uuid ])	)
       nodejs-16_x
       nodePackages.npm
