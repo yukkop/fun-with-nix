@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, stable-22-11, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports =
@@ -153,6 +153,7 @@
       steam
       unzip
       zip
+      omnisharp-roslyn
       wally-cli # A tool to flash firmware to mechanical keyboards
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
@@ -193,7 +194,7 @@
         sdk_6_0
 	sdk_7_0
       ])
-      stable-22-11.wineWowPackages.full
+      wineWowPackages.full
       (python39.withPackages(ps: with ps; [ pandas requests google-api-python-client uuid ])	)
       nodejs-16_x
       nodePackages.npm
