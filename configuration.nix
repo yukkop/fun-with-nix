@@ -163,6 +163,7 @@
           asvetliakov.vscode-neovim
 	  vscodevim.vim
           ms-dotnettools.csharp
+          ms-azuretools.vscode-docker
         ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
             name = "remote-ssh-edit";
