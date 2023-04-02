@@ -131,7 +131,6 @@
     extraGroups = [ "networkmanager" "wheel" ];
     # openssh.authorizedKeys.keys = [ "" "" ]
     packages = with pkgs; [
-      gimp
       jetbrains.rider
       arduino
       pamixer
@@ -219,7 +218,7 @@
       cmake
       gcc9
       mono
-      xorg.xmodmap
+      xmodmap
     ];
 
     shells = [
