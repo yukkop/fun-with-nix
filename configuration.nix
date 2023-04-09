@@ -97,6 +97,68 @@
     xkbOptions = "grp:alt_shift_toggle,grp_led:scroll";
   };
 
+  # networking.firewall = {
+  #   allowedUDPPorts = [ 51820 ]; # Clients and peers can use the same port, see listenport
+  # };
+  # 
+  # # Enable WireGuard
+  # networking.wireguard.interfaces = {
+  # 
+  #   # "wg0" is the network interface name. You can name the interface arbitrarily.
+  #   wg0 = {
+  # 
+  #     # Determines the IP address and subnet of the client's end of the tunnel interface.
+  #     ips = [ "10.13.37.30/32" ];
+  #     listenPort = 51820; # to match firewall allowedUDPPorts (without this wg uses random port numbers)
+  # 
+  #     # Path to the private key file.
+  #     #
+  #     # Note: The private key can also be included inline via the privateKey option,
+  #     # but this makes the private key world-readable; thus, using privateKeyFile is
+  #     # recommended.
+  #     # privateKeyFile = "path to private key file";
+  # 
+  #     peers = [
+  #       # For a client configuration, one peer entry for the server will suffice.
+  # 
+  #       {
+  #         # Public key of the server (not a file path).
+  #         publicKey = "l2T2w3s7ORe1UpiLDJbt+8wiAL45CtsH2L0lmFkU8nA=";
+  # 
+  #         # Forward all the traffic via VPN.
+  #         allowedIPs = [ "0.0.0.0/0" "::0/0" ];
+  #         # Or forward only particular subnets
+  #         #allowedIPs = [ "10.100.0.1" "91.108.12.0/22" ];
+  # 
+  #         # Set this to the server IP and port.
+  #         endpoint = "88.85.81.81:51820";
+  #         # ToDo: route to endpoint not automatically configured https://wiki.archlinux.org/index.php/WireGuard#Loop_routing
+  #         # https://discourse.nixos.org/t/solved-minimal-firewall-setup-for-wireguard-client/7577
+  # 
+  #         # Send keepalives every 25 seconds. Important to keep NAT tables alive.
+  #         persistentKeepalive = 25;
+  #       }
+  #     ];
+  #   };
+  # };
+
+  networking.wg-quick.interfaces = {
+    wg0 = {
+      address = [ "10.13.37.30/32" ];
+      dns = [ "10.0.0.1" "fdc9:281f:04d7:9ee9::1" "8.8.8.8" "1.1.1.1" "2001:4860:4860::8888" "2606:4700:4700::1111" ];
+      privateKeyFile = "/root/wireguard-keys/privatekey";
+      
+      peers = [
+        {
+          publicKey = "l2T2w3s7ORe1UpiLDJbt+8wiAL45CtsH2L0lmFkU8nA=";
+          # presharedKeyFile = "/root/wireguard-keys/preshared_from_peer0_key";
+          allowedIPs = [ "0.0.0.0/0" "::/0" ];
+          endpoint = "88.85.81.81:51820";
+          persistentKeepalive = 25;
+        }
+      ];
+    };
+  };
 
   # Docker
   virtualisation.docker.enable = true;
@@ -131,6 +193,8 @@
     extraGroups = [ "networkmanager" "wheel" ];
     # openssh.authorizedKeys.keys = [ "" "" ]
     packages = with pkgs; [
+      wireguard-tools
+      zathura
       gimp
       jetbrains.rider
       arduino
@@ -141,6 +205,7 @@
       pciutils
       usbutils
       lutris
+      minecraft
       git
       gh # github cli
       glab # gitlab cli
