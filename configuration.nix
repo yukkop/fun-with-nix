@@ -1,4 +1,3 @@
-
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
@@ -222,6 +221,7 @@
       wally-cli # A tool to flash firmware to mechanical keyboards
       (vscode-with-extensions.override {
         vscodeExtensions = with vscode-extensions; [
+          redhat.vscode-xml
           alefragnani.project-manager
 	  dart-code.dart-code
 	  esbenp.prettier-vscode
@@ -264,8 +264,9 @@
       xclip
       (with dotnetCorePackages; combinePackages [
         sdk_3_1
+        sdk_5_0
         sdk_6_0
-	sdk_7_0
+        sdk_7_0
       ])
       wineWowPackages.full
       (python39.withPackages(ps: with ps; [ pandas requests google-api-python-client uuid ])	)
@@ -289,15 +290,34 @@
     ];
 
     shells = [
-      "/runwwwwwadwwwddwcurrent-system/sw/bin/zsh"
+      "/runcurrent-system/sw/bin/zsh"
     ];
 
-    shellInit = ''
-      alias ll='ls -la'
+    interactiveShellInit = ''
+      # navigation #
+
+      # temp
+      alias tcinema='cd /home/yukkop/prj/kwp/cinema'
+      alias tpj='cd /home/yukkop/prj'
+
+      # system #
+      alias conf='nvim /home/yukkop/prj/nix/configuration.nix' 
+      alias nixrb='sudo nixos-rebuild switch --flake /home/yukkop/prj/nix#hectic' 
+
+      # misc #
       alias copy='xclip -selection clipboard'
       alias paste='xclip -selection clipboard -o'
+
+      alias nv='nvim'
+
+      # psql #
+      # TODO if docker container "postgresql-15-db-1" exist
       alias psql='sudo docker exec -it $(sudo docker ps --filter "NAME=postgresql-15-db-1" --format "{{.ID}}") psql'
       alias psqlp='sudo docker exec -it $(sudo docker ps --filter "NAME=postgresql-15-db-1" --format "{{.ID}}") psql -U postgres'
+
+      # games #
+      alias battlenet="env WINEPREFIX='/home/yukkop/Games/homeyukkopdownloadsbattlenet-setupexe' wine '/home/yukkop/Games/homeyukkopdownloadsbattlenet-setupexe/drive_c/ProgramData/Microsoft/Windows/Start Menu/Programs/Battle.net/Battle.net.lnk' > /tmp/battlenet_log.txt 2>&1 & disown"
+      alias chummer='wine /home/yukkop/prg/chummer/Chummer5.exe > /tmp/chummer_log.txt 2>&1 & disown'
     '';
   };
 
