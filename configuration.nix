@@ -192,8 +192,11 @@
     extraGroups = [ "networkmanager" "wheel" ];
     # openssh.authorizedKeys.keys = [ "" "" ]
     packages = with pkgs; [
-      wireguard-tools
-      zathura
+      wireguard-tools # vpn
+      translate-shell # translator
+      glow    # md reader
+      pandoc  # md convertor
+      zathura # pdf reader
       gimp
       jetbrains.rider
       arduino
@@ -250,6 +253,9 @@
 	  }
         ];
       })
+
+      # expiriments:
+      ulauncher
     ];
   };
 # Allow unfree packages
@@ -293,6 +299,8 @@
       "/runcurrent-system/sw/bin/zsh"
     ];
 
+    variables.EDITOR = "nvim";
+
     interactiveShellInit = ''
       # navigation #
 
@@ -306,7 +314,7 @@
 
       # misc #
       alias copy='xclip -selection clipboard'
-      alias paste='xclip -selection clipboard -o'
+      alias put='xclip -selection clipboard -o'
 
       alias nv='nvim'
 
@@ -329,6 +337,23 @@
   #   enableSSHSupport = true;
   # };
   # programs.hyprland.enable = true;
+  programs.neovim = {
+    enable = true;
+    configure = {
+      customRC = ''
+        set number
+        set cc=80
+        set list
+        set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
+        if &diff
+          colorscheme blue
+        endif
+      '';
+      packages.myVimPackage = with pkgs.vimPlugins; {
+        start = [ vim-nix ];
+      };
+    };
+  };
 
   # List services that you want to enable:
 
