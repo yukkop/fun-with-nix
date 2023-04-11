@@ -309,10 +309,12 @@
       # temp
       alias tcinema='cd /home/yukkop/prj/kwp/cinema'
       alias tpj='cd /home/yukkop/prj'
+      alias tnote='cd /home/yukkop/prj/nts'
 
       # system #
       alias conf='nvim /home/yukkop/prj/nix/configuration.nix' 
-      alias confcommit='cd'
+      alias confcommit='cd ~/prj/nix/ && git add . && git commit -m'
+      alias confpush='cd ~/prj/nix && git push'
       alias nixrb='sudo nixos-rebuild switch --flake /home/yukkop/prj/nix#hectic' 
 
       # misc #
