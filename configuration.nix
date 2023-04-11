@@ -292,7 +292,9 @@
       cmake
       gcc9
       mono
+      shellcheck
       xorg.xmodmap
+      zsh
     ];
 
     shells = [
@@ -310,6 +312,7 @@
 
       # system #
       alias conf='nvim /home/yukkop/prj/nix/configuration.nix' 
+      alias confcommit='cd'
       alias nixrb='sudo nixos-rebuild switch --flake /home/yukkop/prj/nix#hectic' 
 
       # misc #
